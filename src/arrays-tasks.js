@@ -478,10 +478,9 @@ function getMaxItems(arr, n) {
  */
 function findCommonElements(arr1, arr2) {
   const elems = new Set(arr2);
+  const arr = [...new Set(arr1.slice(0, Math.min(arr1.length, arr2.length)))];
 
-  return arr1
-    .slice(0, Math.min(arr1.length, arr2.length))
-    .filter(elems.has.bind(elems));
+  return arr.filter((el) => elems.has(el));
 }
 
 /**
@@ -540,8 +539,12 @@ function propagateItemsByPositionIndex(arr) {
  *    shiftArray([10, 20, 30, 40, 50], -3) => [40, 50, 10, 20, 30]
  */
 function shiftArray(arr, n) {
-  return arr.reduce((res, el, idx, a) => {
-    res[(idx + a.length + n) % a.length] = el;
+  const len = arr.length;
+
+  return arr.reduce((res, el, idx) => {
+    const offset = (n % len) + len;
+    res[(idx + offset) % len] = el;
+
     return res;
   }, []);
 }
